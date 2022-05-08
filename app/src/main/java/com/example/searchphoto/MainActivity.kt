@@ -11,12 +11,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
+import twitter4j.JSONObject
 import java.lang.Exception
+import org.json.JSONObject as JSONObject1
 
 class MainActivity : AppCompatActivity() {
     private val BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAA7fcAEAAAAAazfEXOuU%2FL2B3RvnJggamNX88G8%3DGzthCc2JSyt4pzUTjm83CLN6D80Sx3Bb7cBPBWHHdTOPJkHGZw"
@@ -38,7 +39,14 @@ class MainActivity : AppCompatActivity() {
             val query = textBox.text.toString()
             CoroutineScope(Dispatchers.IO).launch {
                 try{
-                    val response = api.fetchTweets(accessToken = "Bearer $BEARER_TOKEN", searchWord = query, attach = "attachments.media_keys",).string()
+                    val response = api.fetchTweets(
+                        accessToken = "Bearer $BEARER_TOKEN",
+                        searchWord = query,
+                        attach = "attachments.media_keys",
+                    ).string()
+                    Log.d("info",response)
+//                    val jsonData = response as TweetData
+//                    val tweetList = jsonData.data
                     val jsonData = JSONObject(response)
                     val tweetList = listOf(jsonData["data"])
                     for(i in tweetList.indices){
@@ -46,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                             textView.text = tweetList[i].toString()
                         }
                     }
+//                    textView.text = tweetList[0].text
                 } catch (e: Exception){
                     Log.d("error","get info error : $e")
                     textView.text = "Failed to get info"

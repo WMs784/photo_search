@@ -6,10 +6,12 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         val handler = Handler()
         val textView = findViewById<TextView>(R.id.text)
         val textBox = findViewById<EditText>(R.id.edit)
+        val image = findViewById<ImageView>(R.id.image)
 
         val BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAA7fcAEAAAAAazfEXOuU%2FL2B3RvnJggamNX88G8%3DGzthCc2JSyt4pzUTjm83CLN6D80Sx3Bb7cBPBWHHdTOPJkHGZw"
         val BASE_URL = "https://api.twitter.com/2/tweets/"
@@ -64,7 +67,10 @@ class MainActivity : AppCompatActivity() {
                         for(i in imageList!!.indices){
                             val imageUrl = imageList?.get(i)?.url
                             if(imageUrl != null){
-                               textView.text = imageUrl
+                               textView.text = tweetList[i]?.text
+                                Picasso.get()
+                                    .load(imageUrl)
+                                    .into(image)
                             }
                         }
 //                        textView.text = imageList?.get(0).toString()

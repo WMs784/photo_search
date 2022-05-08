@@ -1,26 +1,21 @@
 package com.example.searchphoto
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
-import java.lang.Exception
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -35,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun fetchApi(){
+        val handler = Handler()
         val textView = findViewById<TextView>(R.id.text)
         val textBox = findViewById<EditText>(R.id.edit)
 
@@ -50,34 +46,36 @@ class MainActivity : AppCompatActivity() {
             .build()
         thread {
             val query = textBox.text.toString()
-            CoroutineScope(Dispatchers.IO).launch {
+//            CoroutineScope(Dispatchers.IO).launch {
                 try{
                     val api = retrofit.create(TwitterApi::class.java)
-                    val response = api.fetchTweets(accessToken = "Bearer $BEARER_TOKEN", searchWord = query, attach = "attachments.media_keys",).execute().body()
+                    val response = api.fetchTweets(
+                        accessToken = "Bearer $BEARER_TOKEN",
+                        searchWord = query,
+                        attach = "attachments.media_keys",
+                    ).execute().body()?: throw IllegalStateException("bodyがnullだよ！")
                     Log.d("info","$response")
 //                    val jsonData = JSONObject(response)
                     val tweetList = response?.data
-                    if (tweetList != null) {
+                    Handler(Looper.getMainLooper()).post {
                         for(i in tweetList.indices){
-                            withContext(Dispatchers.Main) {
-                                textView.text = tweetList[i].toString()
-                            }
+                            textView.text = tweetList[i]?.text
                         }
                     }
                 } catch (e: Exception){
                     Log.d("error","get info error : $e")
-                    textView.text = "Failed to get info"
+                    textView.text = "error : ${e.toString()}"
                 }
-            }
+//            }
         }
     }
 }
 interface TwitterApi {
 
     @GET("search/recent")
-    suspend fun fetchTweets(
+    fun fetchTweets(
         @Header("Authorization") accessToken: String,
-        @Query("query",) searchWord: String? = null,
+        @Query("query") searchWord: String? = null,
         @Query("expansions")attach: String = "attachments.media_keys",
 //        @Query("media.fields")media: String = "url"
     ):Call<TweetData>

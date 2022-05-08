@@ -23,7 +23,8 @@ data class Media(
     val duration_ms: Int?,
     val media_key: String?,
     val public_metrics: PublicMetricsX?,
-    val type: String?
+    val type: String?,
+    val url: String?
 )
 data class PublicMetricsX(
     val view_count: Int?

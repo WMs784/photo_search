@@ -53,14 +53,21 @@ class MainActivity : AppCompatActivity() {
                         accessToken = "Bearer $BEARER_TOKEN",
                         searchWord = query,
                         attach = "attachments.media_keys",
+                        media = "url"
                     ).execute().body()?: throw IllegalStateException("bodyがnullだよ！")
-                    Log.d("info","$response")
+
 //                    val jsonData = JSONObject(response)
                     val tweetList = response?.data
+                    val imageList = response.includes?.media
+                    Log.d("info","$imageList length : ${imageList?.size}")
                     Handler(Looper.getMainLooper()).post {
-                        for(i in tweetList.indices){
-                            textView.text = tweetList[i]?.text
+                        for(i in imageList!!.indices){
+                            val imageUrl = imageList?.get(i)?.url
+                            if(imageUrl != null){
+                               textView.text = imageUrl
+                            }
                         }
+//                        textView.text = imageList?.get(0).toString()
                     }
                 } catch (e: Exception){
                     Log.d("error","get info error : $e")
@@ -77,6 +84,6 @@ interface TwitterApi {
         @Header("Authorization") accessToken: String,
         @Query("query") searchWord: String? = null,
         @Query("expansions")attach: String = "attachments.media_keys",
-//        @Query("media.fields")media: String = "url"
+        @Query("media.fields")media: String = "url"
     ):Call<TweetData>
 }

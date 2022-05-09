@@ -1,7 +1,7 @@
 package com.example.searchphoto
 
 data class TweetData(
-    val `data`: List<Data?>,
+    val `data`: List<Data?>?,
     val includes: Includes?
 )
 data class Data(
@@ -11,7 +11,6 @@ data class Data(
     val id: String?,
     val public_metrics: PublicMetrics?,
     val source: String?,
-    val text: String?
 )
 data class Attachments(
     val media_keys: List<String?>?
@@ -33,5 +32,5 @@ data class PublicMetrics(
     val like_count: Int?,
     val quote_count: Int?,
     val reply_count: Int?,
-    val retweet_count: Int?
+    val retweet_count: Int?,
 )

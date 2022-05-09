@@ -11,6 +11,7 @@ data class Data(
     val id: String?,
     val public_metrics: PublicMetrics?,
     val source: String?,
+    val text: String?,
 )
 data class Attachments(
     val media_keys: List<String?>?
@@ -23,7 +24,7 @@ data class Media(
     val media_key: String?,
     val public_metrics: PublicMetricsX?,
     val type: String?,
-    val url: String?
+    val url: String?,
 )
 data class PublicMetricsX(
     val view_count: Int?

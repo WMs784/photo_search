@@ -18,10 +18,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
-import kotlin.concurrent.thread
 import twitter4j.JSONObject
 import java.lang.Exception
-
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,14 +75,13 @@ class MainActivity : AppCompatActivity() {
 //                                    .into(image)
 //                            }
 //                        }
-                        //textView.text = imageList?.get(0).toString()
+//                        textView.text = imageList?.get(0).toString()
                         val imageUrl = imageList?.get(0)?.url
                         if(imageUrl != null){
-                            textView.text = tweetList[0]?.text
+                            textView.text = tweetList?.get(0)?.text
                             Picasso.get()
                                 .load(imageUrl)
                                 .into(image)
-
                         }
                     }
 //                    textView.text = tweetList[0].text

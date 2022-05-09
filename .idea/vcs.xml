@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
   <component name="GitSharedSettings">
     <option name="FORCE_PUSH_PROHIBITED_PATTERNS">
       <list>
@@ -7,6 +8,8 @@
       </list>
     </option>
   </component>
+=======
+>>>>>>> 0560078ac5ae151fe9b4452b309c8339acaee960
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>

@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                     val api = retrofit.create(TwitterApi::class.java)
                     val response = api.fetchTweets(
                         accessToken = "Bearer $BEARER_TOKEN",
-                        searchWord = query,
+                        searchWord = "$query 漫画 話",
                         attach = "attachments.media_keys",
                         media = "url"
                     ).execute().body()?: throw IllegalStateException("bodyがnullだよ！")
@@ -64,16 +64,23 @@ class MainActivity : AppCompatActivity() {
                     val imageList = response.includes?.media
                     Log.d("info","$imageList length : ${imageList?.size}")
                     Handler(Looper.getMainLooper()).post {
-                        for(i in imageList!!.indices){
-                            val imageUrl = imageList?.get(i)?.url
-                            if(imageUrl != null){
-                               textView.text = tweetList[i]?.text
-                                Picasso.get()
-                                    .load(imageUrl)
-                                    .into(image)
-                            }
+//                        for(i in imageList!!.indices){
+//                            val imageUrl = imageList?.get(i)?.url
+//                            if(imageUrl != null){
+//                               textView.text = tweetList[i]?.text
+//                                Picasso.get()
+//                                    .load(imageUrl)
+//                                    .into(image)
+//                            }
+//                        }
+                        textView.text = imageList?.get(0).toString()
+                        val imageUrl = imageList?.get(0)?.url
+                        if(imageUrl != null){
+                            textView.text = tweetList[0]?.text
+                            Picasso.get()
+                                .load(imageUrl)
+                                .into(image)
                         }
-//                        textView.text = imageList?.get(0).toString()
                     }
                 } catch (e: Exception){
                     Log.d("error","get info error : $e")

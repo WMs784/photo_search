@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -36,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private fun fetchApi(){
         val handler = Handler()
         val textView = findViewById<TextView>(R.id.text)
-        val textBox = findViewById<EditText>(R.id.edit)
+        val textBox = findViewById<SearchView>(R.id.edit)
         val image = findViewById<ImageView>(R.id.image)
 
         val BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAA7fcAEAAAAAazfEXOuU%2FL2B3RvnJggamNX88G8%3DGzthCc2JSyt4pzUTjm83CLN6D80Sx3Bb7cBPBWHHdTOPJkHGZw"
@@ -50,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
         thread {
-            val query = textBox.text.toString()
+            val query = textBox.query
 //            CoroutineScope(Dispatchers.IO).launch {
                 try{
                     val api = retrofit.create(TwitterApi::class.java)
@@ -62,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                     ).execute().body()?: throw IllegalStateException("bodyがnullだよ！")
 
 //                    val jsonData = JSONObject(response)
-                    val tweetList = response?.data
+                    val tweetList = response.data
                     val imageList = response.includes?.media
                     Log.d("info","$imageList length : ${imageList?.size}")
                     Handler(Looper.getMainLooper()).post {
@@ -87,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 //                    textView.text = tweetList[0].text
                 } catch (e: Exception){
                     Log.d("error","get info error : $e")
-                    textView.text = "error : ${e.toString()}"
+                    textView.text = "error : $e"
                 }
 //            }
         }

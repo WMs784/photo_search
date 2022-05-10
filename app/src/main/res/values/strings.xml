@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">comic from tweets</string>
+    <string name="button_text">Search Comics</string>
 </resources>

@@ -64,8 +64,8 @@ class MainActivity : AppCompatActivity() {
 //                    val jsonData = JSONObject(response)
                     val tweetList = response.data
                     val imageList = response.includes?.media
-                    Log.d("info","$tweetList length : ${tweetList?.size}")
-                    Log.d("info","$imageList length : ${imageList?.size}")
+//                    Log.d("info","$tweetList length : ${tweetList?.size}")
+//                    Log.d("info","$imageList length : ${imageList?.size}")
                     Handler(Looper.getMainLooper()).post {
 //                        for(i in imageList!!.indices){
 //                            val imageUrl = imageList?.get(i)?.url
@@ -80,25 +80,26 @@ class MainActivity : AppCompatActivity() {
                         var t = tweetList?.get(0)?.text
                         var n = response.includes?.users?.get(0)?.name
                         var p = response.includes?.users?.get(0)?.profile_image_url
-//                        val id = response.includes?.tweets?.get(0)?.author_id?.toString()
+                        val id = response.includes?.tweets?.get(0)?.author_id?.toString()
+                        Log.d("info","id is $id, text is $t")
                         if(t != null){
-//                            if(t.length > 2 && t.substring(0,2) == "RT "){
-//                                try{
-//                                    val api = retrofit.create(TwitterApi::class.java)
-//                                    val response2 = api.fetchProfile(
-//                                        accessToken = "Bearer $BEARER_TOKEN",
-//                                        id = "$id",
-//                                    ).execute().body()?: throw IllegalStateException("profile api bodyがnullだよ！")
-//                                    Log.d("info","${response2}")
-//                                    p = response2.profile_image_url
-//                                    n = response2.name
-//                                    t = response.includes?.tweets?.get(0)?.text
-//                                    textView.text = t
-//                                }catch (e: Exception){
-//                                    Log.d("error","get info error : $e")
-//                                    textView.text = "error : $e"
-//                                }
-//                            }
+                            if(t.length > 2 && t.substring(0,3) == "RT "){
+                                Log.d("info","there is retweet")
+                                try{
+                                    val response2 = api.fetchProfile(
+                                        accessToken = "Bearer $BEARER_TOKEN",
+                                        id = id.toString()
+                                    ).execute().body()?: throw IllegalStateException("profile api bodyがnullだよ！")
+                                    Log.d("info","${response2}")
+                                    p = response2.profile_image_url
+                                    n = response2.name
+                                    t = response.includes?.tweets?.get(0)?.text
+                                    Log.d("info","original name $n,text $t,url $p")
+                                }catch (e: Exception){
+                                    Log.d("error","get info error : $e")
+                                    textView.text = "error : $e"
+                                }
+                            }
                             textView.text = t
                         } else {
                             textView.text = "failed to get tweet text"
@@ -137,14 +138,14 @@ interface TwitterApi {
         @Query("query") searchWord: String? = null,
         @Query("expansions")attach: String = "attachments.media_keys,author_id,referenced_tweets.id",
         @Query("media.fields")media: String = "url",
-        @Query("user.fields")user: String = "entities,profile_image_url",
-//        @Query("tweet.fields")originalId: String = "author_id",
+        @Query("user.fields")user: String = "entities,profile_image_url,name",
+        @Query("tweet.fields")originalId: String = "author_id",
     ):Call<TweetData>
 
     @GET("users")
     fun fetchProfile(
         @Header("Authorization") accessToken: String,
-        @Query("ids") id: String,
-        @Query("user.fields") profile: String = "profile_image_url",
+        @Query("user.fields") profile: String = "profile_image_url,name",
+        @Query("ids")id: String
     ):Call<UserData>
 }

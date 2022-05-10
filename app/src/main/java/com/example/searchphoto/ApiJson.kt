@@ -19,7 +19,7 @@ data class Attachments(
 data class Includes(
     val media: List<Media?>?,
     val users: List<UserData?>?,
-//    val tweets: List<OriginalTweet?>?
+    val tweets: List<OriginalTweet?>?
 )
 data class UserData(
 //    val entities: List<Entity?>?,

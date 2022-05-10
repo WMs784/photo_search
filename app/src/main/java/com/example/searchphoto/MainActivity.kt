@@ -34,10 +34,12 @@ class MainActivity : AppCompatActivity() {
         val handler = Handler()
         val textView = findViewById<TextView>(R.id.text)
         val textBox = findViewById<SearchView>(R.id.edit)
+        val nameBox = findViewById<TextView>(R.id.name)
         val image = findViewById<ImageView>(R.id.image)
+        val profileImage = findViewById<ImageView>(R.id.profileImage)
 
         val BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAA7fcAEAAAAAazfEXOuU%2FL2B3RvnJggamNX88G8%3DGzthCc2JSyt4pzUTjm83CLN6D80Sx3Bb7cBPBWHHdTOPJkHGZw"
-        val BASE_URL = "https://api.twitter.com/2/tweets/"
+        val BASE_URL = "https://api.twitter.com/2/"
 
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
@@ -54,13 +56,15 @@ class MainActivity : AppCompatActivity() {
                     val response = api.fetchTweets(
                         accessToken = "Bearer $BEARER_TOKEN",
                         searchWord = "$query 漫画 話",
-                        attach = "attachments.media_keys",
-                        media = "url"
+//                        attach = "attachments.media_keys",
+//                        media = "url"
                     ).execute().body()?: throw IllegalStateException("bodyがnullだよ！")
+                    Log.d("info","${response}")
 
 //                    val jsonData = JSONObject(response)
                     val tweetList = response.data
                     val imageList = response.includes?.media
+                    Log.d("info","$tweetList length : ${tweetList?.size}")
                     Log.d("info","$imageList length : ${imageList?.size}")
                     Handler(Looper.getMainLooper()).post {
 //                        for(i in imageList!!.indices){
@@ -73,12 +77,47 @@ class MainActivity : AppCompatActivity() {
 //                            }
 //                        }
 //                        textView.text = imageList?.get(0).toString()
+                        var t = tweetList?.get(0)?.text
+                        var n = response.includes?.users?.get(0)?.name
+                        var p = response.includes?.users?.get(0)?.profile_image_url
+//                        val id = response.includes?.tweets?.get(0)?.author_id?.toString()
+                        if(t != null){
+//                            if(t.length > 2 && t.substring(0,2) == "RT "){
+//                                try{
+//                                    val api = retrofit.create(TwitterApi::class.java)
+//                                    val response2 = api.fetchProfile(
+//                                        accessToken = "Bearer $BEARER_TOKEN",
+//                                        id = "$id",
+//                                    ).execute().body()?: throw IllegalStateException("profile api bodyがnullだよ！")
+//                                    Log.d("info","${response2}")
+//                                    p = response2.profile_image_url
+//                                    n = response2.name
+//                                    t = response.includes?.tweets?.get(0)?.text
+//                                    textView.text = t
+//                                }catch (e: Exception){
+//                                    Log.d("error","get info error : $e")
+//                                    textView.text = "error : $e"
+//                                }
+//                            }
+                            textView.text = t
+                        } else {
+                            textView.text = "failed to get tweet text"
+                        }
                         val imageUrl = imageList?.get(0)?.url
                         if(imageUrl != null){
-                            textView.text = tweetList?.get(0)?.text
                             Picasso.get()
                                 .load(imageUrl)
                                 .into(image)
+                            if(n != null){
+                                nameBox.text = n
+                            } else {
+                                nameBox.text = "failed to get name data"
+                            }
+                            if(p != null){
+                                Picasso.get()
+                                    .load(p)
+                                    .into(profileImage)
+                            }
                         }
                     }
 //                    textView.text = tweetList[0].text
@@ -92,11 +131,20 @@ class MainActivity : AppCompatActivity() {
 }
 interface TwitterApi {
 
-    @GET("search/recent")
+    @GET("tweets/search/recent")
     fun fetchTweets(
         @Header("Authorization") accessToken: String,
         @Query("query") searchWord: String? = null,
-        @Query("expansions")attach: String = "attachments.media_keys",
-        @Query("media.fields")media: String = "url"
+        @Query("expansions")attach: String = "attachments.media_keys,author_id,referenced_tweets.id",
+        @Query("media.fields")media: String = "url",
+        @Query("user.fields")user: String = "entities,profile_image_url",
+//        @Query("tweet.fields")originalId: String = "author_id",
     ):Call<TweetData>
+
+    @GET("users")
+    fun fetchProfile(
+        @Header("Authorization") accessToken: String,
+        @Query("ids") id: String,
+        @Query("user.fields") profile: String = "profile_image_url",
+    ):Call<UserData>
 }

@@ -70,8 +70,8 @@ class MainActivity : AppCompatActivity() {
 //                    val jsonData = JSONObject(response)
                     val tweetList = response.data
                     val imageList = response.includes?.media
-                    Log.d("info","$tweetList length : ${tweetList?.size}")
-                    Log.d("info","$imageList length : ${imageList?.size}")
+//                    Log.d("info","$tweetList length : ${tweetList?.size}")
+//                    Log.d("info","$imageList length : ${imageList?.size}")
                     Handler(Looper.getMainLooper()).post {
 //                        for(i in imageList!!.indices){
 //                            val imageUrl = imageList?.get(i)?.url
@@ -121,13 +121,22 @@ class MainActivity : AppCompatActivity() {
                                 .load(p)
                                 .into(profileImage)
                         }
-                        repeat(4){
+                        val defUrl = imageList?.get(0)?.url
+                        var match = "aaaaa"
+                        if(defUrl != null)match = defUrl.substring(28,32)
+                        for(it in 0..imageViewList.size-1){
                             val imageUrl = imageList?.get(it)?.url
                             Log.d("info","image url $it is $imageUrl")
                             if(imageUrl != null){
-                                Picasso.get()
-                                    .load(imageUrl)
-                                    .into(imageViewList[it])
+                                Log.d("info","def:$defUrl this:${imageUrl.substring(28,32)}")
+                                if(imageUrl.substring(28,32) != match){
+                                    break
+                                }
+                                else {
+                                    Picasso.get()
+                                        .load(imageUrl)
+                                        .into(imageViewList[it])
+                                }
                             }
                         }
                     }

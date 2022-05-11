@@ -10,7 +10,7 @@
   ツイートから漫画のみを抽出するということがサービスとして成立するのではないかと考えた．
   
 ## 概要
-<img src="https://raw.githubusercontent.com/WMs784/photo_search/feature/app_image.png?token=GHSAT0AAAAAABRXPOMXKC2AZPS43EPCJ2WQYT36B5Q" width="30%">
+<img src="https://i.imgur.com/4XC7lXLh.png" width="50%">
 1.Twitterの`tweets/search/recent`apiを用いて，キーワードに合わせて最近のツイートの中から漫画だと思われるものを抽出する．
 2.ユーザは検索窓に読みたい漫画のキーワードを入れ，検索する． 
 3.検索条件は`"入力テキスト" 漫画 話`と設定した．

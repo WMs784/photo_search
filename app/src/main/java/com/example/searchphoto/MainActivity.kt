@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                                 .load("https://www.shoshinsha-design.com/wp-content/uploads/2020/noimage-760x460.png")
                                 .into(imageViewList[it])
                         }
-                        val size = min(imageList!!.size,imageViewList.size)
+                        val size = min(imageList?.size ?: 0,imageViewList.size)
                         for(it in 0..size-1){
                             val imageUrl = imageList?.get(it)?.url
                             Log.d("info","image url $it is $imageUrl")

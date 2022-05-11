@@ -51,8 +51,3 @@ UIはInstagramを参考にした．ユーザに写真閲覧アプリとして最
   元ツイートの投稿者のプロフィール写真及び名前は元ツイートのままである．そのため，元ツイートの投稿者がわからなくなることはない．<br>
   ところが，APIによって返される投稿者の名前は，リツイートの場合リツイートした人となっている．
   今回は実装の問題上そのままとしたが，本来は元ツイートの投稿者の情報を表示するべきである．
-
-
-## 参考にしたサイト
-- https://zenn.dev/nemuki/articles/my-first-android-app#api-%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%81%AE%E7%94%A8%E3%81%AE%E8%A8%98%E8%BF%B0%E3%82%92%E8%BF%BD%E5%8A%A0
-- https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/media

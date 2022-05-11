@@ -18,6 +18,7 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 import twitter4j.JSONObject
 import java.lang.Exception
+import java.lang.Integer.min
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -125,6 +126,12 @@ class MainActivity : AppCompatActivity() {
                         var match = "aaaaa"
                         if(defUrl != null)match = defUrl.substring(28,32)
                         for(it in 0..imageViewList.size-1){
+                            Picasso.get()
+                                .load("https://www.shoshinsha-design.com/wp-content/uploads/2020/noimage-760x460.png")
+                                .into(imageViewList[it])
+                        }
+                        val size = min(imageList!!.size,imageViewList.size)
+                        for(it in 0..size-1){
                             val imageUrl = imageList?.get(it)?.url
                             Log.d("info","image url $it is $imageUrl")
                             if(imageUrl != null){

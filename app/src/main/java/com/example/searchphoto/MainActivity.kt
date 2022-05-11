@@ -1,5 +1,6 @@
 package com.example.searchphoto
 
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -35,7 +36,12 @@ class MainActivity : AppCompatActivity() {
         val textView = findViewById<TextView>(R.id.text)
         val textBox = findViewById<SearchView>(R.id.edit)
         val nameBox = findViewById<TextView>(R.id.name)
-        val image = findViewById<ImageView>(R.id.image)
+        val image1 = findViewById<ImageView>(R.id.image1)
+        val image2 = findViewById<ImageView>(R.id.image2)
+        val image3 = findViewById<ImageView>(R.id.image3)
+        val image4 = findViewById<ImageView>(R.id.image4)
+        val imageViewList = mutableListOf(image1,image2,image3,image4)
+
         val profileImage = findViewById<ImageView>(R.id.profileImage)
 
         val BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAA7fcAEAAAAAazfEXOuU%2FL2B3RvnJggamNX88G8%3DGzthCc2JSyt4pzUTjm83CLN6D80Sx3Bb7cBPBWHHdTOPJkHGZw"
@@ -64,8 +70,8 @@ class MainActivity : AppCompatActivity() {
 //                    val jsonData = JSONObject(response)
                     val tweetList = response.data
                     val imageList = response.includes?.media
-//                    Log.d("info","$tweetList length : ${tweetList?.size}")
-//                    Log.d("info","$imageList length : ${imageList?.size}")
+                    Log.d("info","$tweetList length : ${tweetList?.size}")
+                    Log.d("info","$imageList length : ${imageList?.size}")
                     Handler(Looper.getMainLooper()).post {
 //                        for(i in imageList!!.indices){
 //                            val imageUrl = imageList?.get(i)?.url
@@ -78,46 +84,50 @@ class MainActivity : AppCompatActivity() {
 //                        }
 //                        textView.text = imageList?.get(0).toString()
                         var t = tweetList?.get(0)?.text
+//                        var t = response.includes?.tweets?.get(0)?.text
                         var n = response.includes?.users?.get(0)?.name
                         var p = response.includes?.users?.get(0)?.profile_image_url
-                        val id = response.includes?.tweets?.get(0)?.author_id?.toString()
+                        val id = response.includes?.tweets?.get(0)?.author_id
                         Log.d("info","id is $id, text is $t")
                         if(t != null){
                             if(t.length > 2 && t.substring(0,3) == "RT "){
                                 Log.d("info","there is retweet")
-                                try{
-                                    val response2 = api.fetchProfile(
-                                        accessToken = "Bearer $BEARER_TOKEN",
-                                        id = id.toString()
-                                    ).execute().body()?: throw IllegalStateException("profile api bodyがnullだよ！")
-                                    Log.d("info","${response2}")
-                                    p = response2.profile_image_url
-                                    n = response2.name
-                                    t = response.includes?.tweets?.get(0)?.text
-                                    Log.d("info","original name $n,text $t,url $p")
-                                }catch (e: Exception){
-                                    Log.d("error","get info error : $e")
-                                    textView.text = "error : $e"
-                                }
+//                                try{
+//                                    val response2 = api.fetchProfile(
+//                                        accessToken = "Bearer $BEARER_TOKEN",
+//                                        id = id.toString()
+//                                    ).execute().body()?: throw IllegalStateException("profile api bodyがnullだよ！")
+//                                    Log.d("info","${response2}")
+//                                    p = response2.profile_image_url
+//                                    n = response2.name
+//                                    t = response.includes?.tweets?.get(0)?.text
+//                                    Log.d("info","original name $n,text $t,url $p")
+//                                }catch (e: Exception){
+//                                    Log.d("error","get info error : $e")
+//                                    textView.text = "error : $e"
+//                                }
                             }
                             textView.text = t
                         } else {
                             textView.text = "failed to get tweet text"
                         }
-                        val imageUrl = imageList?.get(0)?.url
-                        if(imageUrl != null){
+                        if(n != null){
+                            nameBox.text = n
+                        } else {
+                            nameBox.text = "failed to get name data"
+                        }
+                        if(p != null){
                             Picasso.get()
-                                .load(imageUrl)
-                                .into(image)
-                            if(n != null){
-                                nameBox.text = n
-                            } else {
-                                nameBox.text = "failed to get name data"
-                            }
-                            if(p != null){
+                                .load(p)
+                                .into(profileImage)
+                        }
+                        repeat(4){
+                            val imageUrl = imageList?.get(it)?.url
+                            Log.d("info","image url $it is $imageUrl")
+                            if(imageUrl != null){
                                 Picasso.get()
-                                    .load(p)
-                                    .into(profileImage)
+                                    .load(imageUrl)
+                                    .into(imageViewList[it])
                             }
                         }
                     }
@@ -145,7 +155,7 @@ interface TwitterApi {
     @GET("users")
     fun fetchProfile(
         @Header("Authorization") accessToken: String,
-        @Query("user.fields") profile: String = "profile_image_url,name",
         @Query("ids")id: String
+//        @Query("user.fields") profile: String = "profile_image_url,name",
     ):Call<UserData>
 }

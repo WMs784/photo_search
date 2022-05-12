@@ -30,70 +30,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:text="@string/button_text"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_margin="20dp"
-                    android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/profileImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"/>
-
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:autoLink="all"
-                    android:text=""
-                    android:textAlignment="center" />
-                </LinearLayout>
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/image1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <ImageView
-                            android:id="@+id/image2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <ImageView
-                            android:id="@+id/image3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <ImageView
-                            android:id="@+id/image4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                </HorizontalScrollView>
-
-                <TextView
-                    android:id="@+id/text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textAlignment="center"
-                    android:text=""
-                    android:autoLink="all"/>
-            </LinearLayout>
+            <include layout="@layout/tweet_content" android:id="@+id/tweet"/>
         </LinearLayout>
     </ScrollView>
 

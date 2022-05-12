@@ -1,6 +1,5 @@
 package com.example.searchphoto
 
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,7 +15,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
-import twitter4j.JSONObject
 import java.lang.Exception
 import java.lang.Integer.min
 import kotlin.concurrent.thread
@@ -33,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun fetchApi(){
-        val handler = Handler()
         val textView = findViewById<TextView>(R.id.text)
         val textBox = findViewById<SearchView>(R.id.edit)
         val nameBox = findViewById<TextView>(R.id.name)
@@ -63,38 +60,27 @@ class MainActivity : AppCompatActivity() {
                     val response = api.fetchTweets(
                         accessToken = "Bearer $BEARER_TOKEN",
                         searchWord = "$query 漫画 話",
-//                        attach = "attachments.media_keys",
-//                        media = "url"
                     ).execute().body()?: throw IllegalStateException("bodyがnullだよ！")
                     Log.d("info","${response}")
-
-//                    val jsonData = JSONObject(response)
                     val tweetList = response.data
                     val imageList = response.includes?.media
 //                    Log.d("info","$tweetList length : ${tweetList?.size}")
 //                    Log.d("info","$imageList length : ${imageList?.size}")
                     Handler(Looper.getMainLooper()).post {
-//                        for(i in imageList!!.indices){
-//                            val imageUrl = imageList?.get(i)?.url
-//                            if(imageUrl != null){
-//                               textView.text = tweetList[i]?.text
-//                                Picasso.get()
-//                                    .load(imageUrl)
-//                                    .into(image)
-//                            }
-//                        }
-//                        textView.text = imageList?.get(0).toString()
                         var t = tweetList?.get(0)?.text
-//                        var t = response.includes?.tweets?.get(0)?.text
-                        var n = response.includes?.users?.get(0)?.name
-                        var p = response.includes?.users?.get(0)?.profile_image_url
-                        val id = response.includes?.tweets?.get(0)?.author_id
+//                        var ort = response.includes?.tweets?.get(0)?.text//元ツイートのテキスト
+                        var n = response.includes?.users?.get(0)?.name//投稿者のユーザ名
+                        var p = response.includes?.users?.get(0)?.profile_image_url//投稿者のプロフィール画像url
+                        val id = response.includes?.tweets?.get(0)?.author_id//元ツイートの投稿者のid
                         Log.d("info","id is $id, text is $t")
+                        /*
+                        取得したデータのnull判定
+                         */
                         if(t != null){
-                            if(t.length > 2 && t.substring(0,3) == "RT "){
+                            if(t.length > 2 && t.substring(0,3) == "RT "){//表示ツイートがリツイートかどうか判定
                                 Log.d("info","there is retweet")
 //                                try{
-//                                    val response2 = api.fetchProfile(
+//                                    val response2 = api.fetchProfile(//userの情報を取得するAPIを使用(うまく実行できず)
 //                                        accessToken = "Bearer $BEARER_TOKEN",
 //                                        id = id.toString()
 //                                    ).execute().body()?: throw IllegalStateException("profile api bodyがnullだよ！")
@@ -124,10 +110,10 @@ class MainActivity : AppCompatActivity() {
                         }
                         val defUrl = imageList?.get(0)?.url
                         var match = "aaaaa"
-                        if(defUrl != null)match = defUrl.substring(28,32)
-                        for(it in 0..imageViewList.size-1){
+                        if(defUrl != null)match = defUrl.substring(28,32)//ツイートのurlに含まれるidを取得
+                        for(it in 0..imageViewList.size-1){//一旦画像をリセット(これをやらないと前の検索結果のデータが残ってしまう)
                             Picasso.get()
-                                .load("https://www.shoshinsha-design.com/wp-content/uploads/2020/noimage-760x460.png")
+                                .load("https://www.shoshinsha-design.com/wp-content/uploads/2020/noimage-760x460.png")//何も表示しないためにあえて存在しないurlになっています
                                 .into(imageViewList[it])
                         }
                         val size = min(imageList?.size ?: 0,imageViewList.size)
@@ -136,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                             Log.d("info","image url $it is $imageUrl")
                             if(imageUrl != null){
                                 Log.d("info","def:$defUrl this:${imageUrl.substring(28,32)}")
-                                if(imageUrl.substring(28,32) != match){
+                                if(imageUrl.substring(28,32) != match){//一致しなけれbば同一ツイートではないとみなす
                                     break
                                 }
                                 else {
@@ -158,7 +144,7 @@ class MainActivity : AppCompatActivity() {
 }
 interface TwitterApi {
 
-    @GET("tweets/search/recent")
+    @GET("tweets/search/recent")//最新のツイートを検索
     fun fetchTweets(
         @Header("Authorization") accessToken: String,
         @Query("query") searchWord: String? = null,
@@ -168,7 +154,7 @@ interface TwitterApi {
         @Query("tweet.fields")originalId: String = "author_id",
     ):Call<TweetData>
 
-    @GET("users")
+    @GET("users")//userの情報を検索
     fun fetchProfile(
         @Header("Authorization") accessToken: String,
         @Query("ids")id: String

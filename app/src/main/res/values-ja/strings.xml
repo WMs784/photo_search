@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ツイート漫画検索</string>
+    <string name="button_text">検索する</string>
+    <string name="hint_text">入力してください</string>
+</resources>

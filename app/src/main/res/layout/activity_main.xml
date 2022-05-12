@@ -21,7 +21,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="20dp"
-                android:background="@drawable/frame"/>
+                android:background="@drawable/frame"
+                android:queryHint="@string/hint_text"
+                android:iconifiedByDefault="false"
+                />
 
             <Button
                 android:id="@+id/button"

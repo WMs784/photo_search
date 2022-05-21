@@ -6,41 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-            <EditText
+            <SearchView
                 android:id="@+id/edit"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="20dp"
+                android:background="@drawable/frame"
+                android:queryHint="@string/hint_text"
+                android:iconifiedByDefault="false"
+                />
 
             <Button
                 android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Get API response!"/>
+                android:layout_marginHorizontal="20dp"
+                android:text="@string/button_text"/>
 
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="Response here" />
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
+            <include layout="@layout/tweet_content" android:id="@+id/tweet"/>
         </LinearLayout>
     </ScrollView>
 

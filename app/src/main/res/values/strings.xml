@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">comic from tweets</string>
+    <string name="button_text">Search Comics</string>
+    <string name="hint_text">input keyword</string>
 </resources>
